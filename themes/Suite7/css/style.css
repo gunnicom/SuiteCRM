@@ -5449,10 +5449,5 @@ div.password {
 }
 
 #toolbox{
-    height:100% !important;
-}
-
-#panels{
-    height:auto !important;
     overflow:auto;
 }
