@@ -6,9 +6,24 @@ if (!defined('sugarEntry') || !sugarEntry)
 class OpportunitiesJjwg_MapsLogicHook {
 
     var $jjwg_Maps;
-    function OpportunitiesJjwg_MapsLogicHook() {
+    function __construct() {
         $this->jjwg_Maps = get_module_info('jjwg_Maps');
     }
+
+    /**
+     * @deprecated deprecated since version 7.6, PHP4 Style Constructors are deprecated and will be remove in 7.8, please update your code, use __construct instead
+     */
+    function OpportunitiesJjwg_MapsLogicHook(){
+        $deprecatedMessage = 'PHP4 Style Constructors are deprecated and will be remove in 7.8, please update your code';
+        if(isset($GLOBALS['log'])) {
+            $GLOBALS['log']->deprecated($deprecatedMessage);
+        }
+        else {
+            trigger_error($deprecatedMessage, E_USER_DEPRECATED);
+        }
+        self::__construct();
+    }
+
 
     function updateGeocodeInfo(&$bean, $event, $arguments) {
         // before_save
@@ -42,8 +57,7 @@ class OpportunitiesJjwg_MapsLogicHook {
 
     function addRelationship(&$bean, $event, $arguments) {
         // after_relationship_add
-        $GLOBALS['log']->info(__METHOD__.' $arguments: '.print_r($arguments, true));
-        // $arguments['module'], $arguments['related_module'], $arguments['id'] and $arguments['related_id'] 
+        // $arguments['module'], $arguments['related_module'], $arguments['id'] and $arguments['related_id']
         if ($this->jjwg_Maps->settings['logic_hooks_enabled']) {
             $focus = get_module_info($arguments['module']);
             if (!empty($arguments['id'])) {
@@ -56,11 +70,10 @@ class OpportunitiesJjwg_MapsLogicHook {
             }
         }
     }
-    
+
     function deleteRelationship(&$bean, $event, $arguments) {
         // after_relationship_delete
-        $GLOBALS['log']->info(__METHOD__.' $arguments: '.print_r($arguments, true));
-        // $arguments['module'], $arguments['related_module'], $arguments['id'] and $arguments['related_id'] 
+        // $arguments['module'], $arguments['related_module'], $arguments['id'] and $arguments['related_id']
         if ($this->jjwg_Maps->settings['logic_hooks_enabled']) {
             $focus = get_module_info($arguments['module']);
             if (!empty($arguments['id'])) {
@@ -73,5 +86,5 @@ class OpportunitiesJjwg_MapsLogicHook {
             }
         }
     }
-    
+
 }

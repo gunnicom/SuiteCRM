@@ -11,10 +11,25 @@ class SubPanelSearchForm extends SearchForm  {
 
     var $subPanel; // the instantiated bean of the subPanel
 
-    function SubPanelSearchForm($seed, $module, $subPanel, $options = array()){
+    function __construct($seed, $module, $subPanel, $options = array()){
         $this->subPanel = $subPanel;
-        parent::SearchForm($seed, $module, 'DetailView', $options);
+        parent::__construct($seed, $module, 'DetailView', $options);
     }
+
+    /**
+     * @deprecated deprecated since version 7.6, PHP4 Style Constructors are deprecated and will be remove in 7.8, please update your code, use __construct instead
+     */
+    function SubPanelSearchForm($seed, $module, $subPanel, $options = array()){
+        $deprecatedMessage = 'PHP4 Style Constructors are deprecated and will be remove in 7.8, please update your code';
+        if(isset($GLOBALS['log'])) {
+            $GLOBALS['log']->deprecated($deprecatedMessage);
+        }
+        else {
+            trigger_error($deprecatedMessage, E_USER_DEPRECATED);
+        }
+        self::__construct($seed, $module, $subPanel, $options);
+    }
+
 
     function display($header = false){
         /*//global $app_list_strings;
@@ -22,6 +37,11 @@ class SubPanelSearchForm extends SearchForm  {
             $GLOBALS['app_list_strings']['collection_temp_list'] = $this->getCollectionList($this->subPanel->subpanel_defs->base_collection_list);
         }*/
         $this->th->ss->assign('subpanel', $this->subPanel->subpanel_id);
+
+        // Adding the offset to subpanel search field - this has no affect on pagination
+        if($this->subPanel->parent_bean->module_dir != ''){
+            $this->th->ss->assign('subpanelPageOffset', '<input type="hidden" name="'.$this->subPanel->parent_bean->module_dir.'_'.$this->subPanel->subpanel_id.'_CELL_offset" value="0" />');
+        }
         $this->parsedView = 'sps';
         return parent::display($header);
     }
@@ -47,4 +67,4 @@ class SubPanelSearchForm extends SearchForm  {
         return null;
     }
 
-} 
+}
